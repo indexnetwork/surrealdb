@@ -2,7 +2,10 @@
 
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
+#[cfg(target_arch = "wasm32-unknown-unknown")]
 use trice::Instant;
+#[cfg(not(target_arch = "wasm32-unknown-unknown"))]
+use std::time::Instant;
 
 /// A 'static view into the cancellation status of a Context.
 #[derive(Clone, Debug, Default)]

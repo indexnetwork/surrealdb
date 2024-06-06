@@ -35,7 +35,8 @@ use std::sync::Arc;
 use std::sync::OnceLock;
 use std::task::Poll;
 use tokio::sync::watch;
-use wasm_bindgen_futures::spawn_local;
+//use wasm_bindgen_futures::spawn_local;
+use tokio::spawn as spawn_local;
 
 impl crate::api::Connection for Db {}
 

@@ -12,7 +12,7 @@ use std::fmt;
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::Duration;
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(not(target_arch = "wasm32-unknown-unknown"))]
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use channel::{Receiver, Sender};
@@ -22,7 +22,7 @@ use tokio::sync::RwLock;
 use tracing::instrument;
 use tracing::trace;
 
-#[cfg(target_arch = "wasm32")]
+#[cfg(target_arch = "wasm32-unknown-unknown")]
 use wasmtimer::std::{SystemTime, UNIX_EPOCH};
 
 use super::tx::Transaction;

@@ -4,11 +4,14 @@ use channel::Receiver;
 use futures::lock::Mutex;
 use futures::StreamExt;
 use reblessive::TreeStack;
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(not(target_arch = "wasm32-unknown-unknown"))]
 use tokio::spawn;
 use tracing::instrument;
+#[cfg(target_arch = "wasm32-unknown-unknown")]
 use trice::Instant;
-#[cfg(target_arch = "wasm32")]
+#[cfg(not(target_arch = "wasm32-unknown-unknown"))]
+use std::time::Instant;
+#[cfg(target_arch = "wasm32-unknown-unknown")]
 use wasm_bindgen_futures::spawn_local as spawn;
 
 use crate::ctx::Context;

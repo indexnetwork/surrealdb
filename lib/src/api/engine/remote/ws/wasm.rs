@@ -44,7 +44,10 @@ use std::sync::Arc;
 use std::sync::OnceLock;
 use std::time::Duration;
 use tokio::sync::watch;
+#[cfg(target_arch = "wasm32-unknown-unknown")]
 use trice::Instant;
+#[cfg(not(target_arch = "wasm32-unknown-unknown"))]
+use std::time::Instant;
 use wasm_bindgen_futures::spawn_local;
 use wasmtimer::tokio as time;
 use wasmtimer::tokio::MissedTickBehavior;

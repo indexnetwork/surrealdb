@@ -54,7 +54,10 @@ use tokio_tungstenite::tungstenite::Message;
 use tokio_tungstenite::Connector;
 use tokio_tungstenite::MaybeTlsStream;
 use tokio_tungstenite::WebSocketStream;
+#[cfg(target_arch = "wasm32-unknown-unknown")]
 use trice::Instant;
+#[cfg(not(target_arch = "wasm32-unknown-unknown"))]
+use std::time::Instant;
 
 type WsResult<T> = std::result::Result<T, WsError>;
 

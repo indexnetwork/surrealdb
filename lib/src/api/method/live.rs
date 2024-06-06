@@ -37,9 +37,9 @@ use std::mem;
 use std::pin::Pin;
 use std::task::Context;
 use std::task::Poll;
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(not(target_arch = "wasm32-unknown-unknown"))]
 use tokio::spawn;
-#[cfg(target_arch = "wasm32")]
+#[cfg(target_arch = "wasm32-unknown-unknown")]
 use wasm_bindgen_futures::spawn_local as spawn;
 
 const ID: &str = "id";

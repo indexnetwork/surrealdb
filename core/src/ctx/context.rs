@@ -29,7 +29,10 @@ use std::str::FromStr;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
+#[cfg(target_arch = "wasm32-unknown-unknown")]
 use trice::Instant;
+#[cfg(not(target_arch = "wasm32-unknown-unknown"))]
+use std::time::Instant;
 #[cfg(feature = "http")]
 use url::Url;
 
