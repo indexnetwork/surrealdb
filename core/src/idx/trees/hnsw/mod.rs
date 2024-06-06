@@ -263,7 +263,8 @@ where
 				Some((ep_dist, ep_id))
 			} else {
 				#[cfg(debug_assertions)]
-				unreachable!()
+				unreachable!();
+				None
 			}
 		} else {
 			None
