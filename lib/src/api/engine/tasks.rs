@@ -7,7 +7,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
 
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(not(target_arch = "wasm32-unknown-unknown"))]
 use tokio::task::JoinHandle;
 
 use crate::dbs::Options;
@@ -16,16 +16,16 @@ use crate::kvs::Datastore;
 use crate::options::EngineOptions;
 
 use crate::engine::IntervalStream;
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(not(target_arch = "wasm32-unknown-unknown"))]
 use crate::Error as RootError;
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(not(target_arch = "wasm32-unknown-unknown"))]
 use tokio::spawn as spawn_future;
-#[cfg(target_arch = "wasm32")]
+#[cfg(target_arch = "wasm32-unknown-unknown")]
 use wasm_bindgen_futures::spawn_local as spawn_future;
 
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(not(target_arch = "wasm32-unknown-unknown"))]
 type FutureTask = JoinHandle<()>;
-#[cfg(target_arch = "wasm32")]
+#[cfg(target_arch = "wasm32-unknown-unknown")]
 /// This will be true if a task has completed
 type FutureTask = Arc<AtomicBool>;
 
@@ -35,7 +35,7 @@ pub struct Tasks {
 }
 
 impl Tasks {
-	#[cfg(not(target_arch = "wasm32"))]
+	#[cfg(not(target_arch = "wasm32-unknown-unknown"))]
 	pub async fn resolve(self) -> Result<(), RootError> {
 		self.nd.await.map_err(|e| {
 			error!("Node agent task failed: {}", e);
@@ -77,9 +77,9 @@ fn init(opt: &EngineOptions, dbs: Arc<Datastore>) -> (FutureTask, Sender<()>) {
 	let tick_interval = opt.tick_interval;
 
 	trace!("Ticker interval is {:?}", tick_interval);
-	#[cfg(target_arch = "wasm32")]
+	#[cfg(target_arch = "wasm32-unknown-unknown")]
 	let completed_status = Arc::new(AtomicBool::new(false));
-	#[cfg(target_arch = "wasm32")]
+	#[cfg(target_arch = "wasm32-unknown-unknown")]
 	let ret_status = completed_status.clone();
 
 	// We create a channel that can be streamed that will indicate termination
@@ -104,12 +104,12 @@ fn init(opt: &EngineOptions, dbs: Arc<Datastore>) -> (FutureTask, Sender<()>) {
 			}
 		}
 
-		#[cfg(target_arch = "wasm32")]
+		#[cfg(target_arch = "wasm32-unknown-unknown")]
 		completed_status.store(true, Ordering::Relaxed);
 	});
-	#[cfg(not(target_arch = "wasm32"))]
+	#[cfg(not(target_arch = "wasm32-unknown-unknown"))]
 	return (_fut, tx);
-	#[cfg(target_arch = "wasm32")]
+	#[cfg(target_arch = "wasm32-unknown-unknown")]
 	return (ret_status, tx);
 }
 
@@ -117,9 +117,9 @@ fn init(opt: &EngineOptions, dbs: Arc<Datastore>) -> (FutureTask, Sender<()>) {
 fn live_query_change_feed(opt: &EngineOptions, dbs: Arc<Datastore>) -> (FutureTask, Sender<()>) {
 	let tick_interval = opt.tick_interval;
 
-	#[cfg(target_arch = "wasm32")]
+	#[cfg(target_arch = "wasm32-unknown-unknown")]
 	let completed_status = Arc::new(AtomicBool::new(false));
-	#[cfg(target_arch = "wasm32")]
+	#[cfg(target_arch = "wasm32-unknown-unknown")]
 	let ret_status = completed_status.clone();
 
 	// We create a channel that can be streamed that will indicate termination
@@ -131,7 +131,7 @@ fn live_query_change_feed(opt: &EngineOptions, dbs: Arc<Datastore>) -> (FutureTa
 		let _lifecycle = crate::dbs::LoggingLifecycle::new("live query agent task".to_string());
 		if !FFLAGS.change_feed_live_queries.enabled() {
 			// TODO verify test fails since return without completion
-			#[cfg(target_arch = "wasm32")]
+			#[cfg(target_arch = "wasm32-unknown-unknown")]
 			completed_status.store(true, Ordering::Relaxed);
 			return;
 		}
@@ -154,19 +154,19 @@ fn live_query_change_feed(opt: &EngineOptions, dbs: Arc<Datastore>) -> (FutureTa
 				break;
 			}
 		}
-		#[cfg(target_arch = "wasm32")]
+		#[cfg(target_arch = "wasm32-unknown-unknown")]
 		completed_status.store(true, Ordering::Relaxed);
 	});
-	#[cfg(not(target_arch = "wasm32"))]
+	#[cfg(not(target_arch = "wasm32-unknown-unknown"))]
 	return (_fut, tx);
-	#[cfg(target_arch = "wasm32")]
+	#[cfg(target_arch = "wasm32-unknown-unknown")]
 	return (ret_status, tx);
 }
 
 async fn interval_ticker(interval: Duration) -> IntervalStream {
-	#[cfg(not(target_arch = "wasm32"))]
+	#[cfg(not(target_arch = "wasm32-unknown-unknown"))]
 	use tokio::{time, time::MissedTickBehavior};
-	#[cfg(target_arch = "wasm32")]
+	#[cfg(target_arch = "wasm32-unknown-unknown")]
 	use wasmtimer::{tokio as time, tokio::MissedTickBehavior};
 
 	let mut interval = time::interval(interval);

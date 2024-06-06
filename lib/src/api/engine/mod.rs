@@ -31,13 +31,13 @@ use std::mem;
 use std::pin::Pin;
 use std::task::Context;
 use std::task::Poll;
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(not(target_arch = "wasm32-unknown-unknown"))]
 use tokio::time::Instant;
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(not(target_arch = "wasm32-unknown-unknown"))]
 use tokio::time::Interval;
-#[cfg(target_arch = "wasm32")]
+#[cfg(target_arch = "wasm32-unknown-unknown")]
 use wasmtimer::std::Instant;
-#[cfg(target_arch = "wasm32")]
+#[cfg(target_arch = "wasm32-unknown-unknown")]
 use wasmtimer::tokio::Interval;
 
 #[allow(dead_code)] // used by the the embedded database and `http`
